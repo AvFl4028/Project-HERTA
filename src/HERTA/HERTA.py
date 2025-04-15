@@ -1,7 +1,7 @@
 import HERTA.Tools.IA as ia
 from HERTA.Tools.Types.IA import IA_TYPE
-import HERTA.Tools.Files as fl
-
+from HERTA.Tools.Commands.Commands import Touch
+import os
 class HERTA:
     def __init__(self, ia_type: IA_TYPE):
         match ia_type:
@@ -9,7 +9,15 @@ class HERTA:
                 self.ia = ia.Gemini()
             case IA_TYPE.OLLAMA:
                 self.ia = None
-        pass
 
     def init(self):
-        pass
+        try:
+            while True:
+                response = self.ia.response(input("¿Qué quieres hacer?\n"))
+                if response["command"] == "touch":
+                    file = os.path.join(".", response["file_name"])
+                    Touch(file)
+                    with open(file, "w", encoding="utf-8") as fl:
+                        fl.write(response["response"])
+        except KeyboardInterrupt:
+            print("\nHasta luego!")
