@@ -1,1 +1,5 @@
 /venv
+/src/HERTA/__pycache__
+/src/HERTA/Tools/__pycache__
+.env
+/src/HERTA/Tools/Types/__pycache__
