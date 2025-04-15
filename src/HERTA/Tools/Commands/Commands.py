@@ -1,6 +1,5 @@
 import subprocess
 import os
-import time
 
 
 class Commands:
@@ -32,8 +31,6 @@ class Touch(Commands):
     def __init__(self, path: str):
         super().__init__("touch", path)
 
-    def execute(self):
-        return super().execute()
 
 
 def getPaths(path: str) -> list[str]:
@@ -52,6 +49,7 @@ def getPaths(path: str) -> list[str]:
 
 
 if __name__ == "__main__":
+    Touch("./src/test.py").execute()
     for i in getPaths("/home/avfl/Documentos/Notas_ITO/Segundo Semestre"):
         print(i)
     pass
