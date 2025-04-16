@@ -32,7 +32,6 @@ class Touch(Commands):
         super().__init__("touch", path)
 
 
-
 def getPaths(path: str) -> list[str]:
     paths = []
     try:
