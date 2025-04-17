@@ -53,7 +53,6 @@ class Gemini:
         )
 
     def response(self, msg: str) -> dict:
-
         accion = json.loads(self.action(msg))
         accion["response"] = self.consult(accion["consulta"])
         return accion
