@@ -14,6 +14,9 @@ class HERTA:
         else:
             self.path = "."
 
+        self.__message: str
+        self.__response: dict
+
         match ia_type:
             case IA_TYPE.GEMINI:
                 self.ia = ia.Gemini()
@@ -31,12 +34,25 @@ class HERTA:
         except KeyboardInterrupt:
             print("\nHasta luego!")
 
-    def godot(self, msg: str):
-        print(msg)
-        response = self.ia.response(msg)
-        print(response)
-        if response["command"] == "touch":
-            file = os.path.join(self.path, response["file_name"])
-            Files().write(response["response"], file)
-        
-        return "Todo bien :3"
+    def setMessage(self, msg):
+        if msg != None:
+            self.__message = msg
+            return True
+        return False
+
+    def loadResponse(self):
+        try:
+            self.__response = self.ia.response(self.message)
+            return True
+        except:
+            return False
+
+    def getResponse(self):
+        return self.response["response"]
+
+    def action(self) -> bool:
+        if self.response["command"] == "touch":
+            file = os.path.join(self.path, self.response["file_name"])
+            Files().write(self.response["response"], file)
+            return True
+        return False

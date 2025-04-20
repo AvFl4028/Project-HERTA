@@ -5,3 +5,5 @@
 .env
 /src/HERTA/Tools/Types/__pycache__
 /src/HERTA/Tools/Commands/__pycache__
+/.vscode
+paths.json

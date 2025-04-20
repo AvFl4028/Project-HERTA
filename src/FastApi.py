@@ -9,7 +9,7 @@ class UserRequest(BaseModel):
 
 
 app = FastAPI()
-
+herta = HERTA(IA_TYPE.GEMINI, debug=True)
 
 @app.get("/")
 def status_handler():
@@ -18,6 +18,20 @@ def status_handler():
 
 @app.post("/post")
 def post_handler(req: UserRequest):
-    print(req.message)
-    response = HERTA(ia_type=IA_TYPE.GEMINI, debug=True).godot(req.message)
-    return {"response": response}
+    if herta.setMessage(req.message):
+        return {"status": "ok"}
+    return {"status": "error"}
+
+@app.get("/loadResponse")
+def loadResponse_handler():
+    if herta.loadResponse():
+        return {"status": "OK"}
+    return {"status": "error"}
+
+@app.get("/response")
+async def response_handler():
+    return {"response": herta.getResponse()}
+
+@app.get("/action")
+def action_handler():
+    return {"status": herta.action()}
