@@ -52,6 +52,17 @@ class Gemini:
             .replace("json", "")
         )
 
+    def statusMessage(self, msg: str, status: bool) -> str:
+        prompt = (
+            "Analiza el siguiente mensaje y deduce un mensaje en el cual me digas el estado de la accion a partir del valor de la variable, unicamente dame el mensaje, aqui esta el mensaje y variable: "
+            f"{msg}"
+            f"variable status: {status}"
+        )
+        return self.client.models.generate_content(
+            model=self.model,
+            contents=prompt,
+        ).text
+
     def response(self, msg: str) -> dict:
         accion = json.loads(self.action(msg))
         accion["response"] = self.consult(accion["consulta"])

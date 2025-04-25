@@ -14,8 +14,8 @@ class HERTA:
         else:
             self.path = "."
 
-        self.__message: str
-        self.__response: dict
+        self.__message: str = None
+        self.__response: dict = None
 
         match ia_type:
             case IA_TYPE.GEMINI:
@@ -42,17 +42,24 @@ class HERTA:
 
     def loadResponse(self):
         try:
-            self.__response = self.ia.response(self.message)
+            self.__response = self.ia.response(self.__message)
             return True
         except:
             return False
 
+    def getMessage(self) -> str:
+        return self.__message
+
     def getResponse(self):
-        return self.response["response"]
+        return self.__response["response"]
 
     def action(self) -> bool:
-        if self.response["command"] == "touch":
-            file = os.path.join(self.path, self.response["file_name"])
-            Files().write(self.response["response"], file)
+        if self.__response["command"] == "touch":
+            file = os.path.join(self.path, self.__response["file_name"])
+            Files().write(self.__response["response"], file)
             return True
         return False
+    
+
+    def getStatusMessage(self, status: bool) -> str:
+        return self.ia.statusMessage(self.__message, status)
