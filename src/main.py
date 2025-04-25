@@ -1,22 +1,10 @@
-from ollama import Client
+from HERTA.HERTA import HERTA as herta
+from HERTA.Tools.Types.IA import IA_TYPE
 
 
 def main():
-    HERTA = Client()
-    model_name = "deepseek-r1:1.5b"
-    herta = HERTA.create(
-        model="HERTA",
-        from_=model_name,
-        system="You are a AI assistant that can edit files in the system",
-    )
-    print(herta.status)
-
-    herta_chat = HERTA.chat(
-        model="HERTA", messages=[{"role": "assistant", "content": "What are you?"}]
-    )
-
-    print(herta_chat.message.content)
-
+    bot = herta(IA_TYPE.GEMINI, debug=True)
+    bot.init()
 
 
 if __name__ == "__main__":
