@@ -1,6 +1,4 @@
-import HERTA.Tools.IA as ia
-from HERTA.Tools.Types.IA import IA_TYPE
-from HERTA.Tools.Files import Files
+from HERTA.Tools import IA_TYPE, Files, Gemini
 import os
 from dotenv import load_dotenv
 
@@ -16,10 +14,12 @@ class HERTA:
 
         self.__message: str = None
         self.__response: dict = None
+        self.command: str = None
+        self.__command: str = None
 
         match ia_type:
             case IA_TYPE.GEMINI:
-                self.ia = ia.Gemini()
+                self.ia = Gemini()
             case IA_TYPE.OLLAMA:
                 self.ia = None
 
@@ -51,6 +51,8 @@ class HERTA:
         return self.__message
 
     def getResponse(self):
+        if (self.__command == "concept"):
+            return self.__response["concept"]
         return self.__response["response"]
 
     def action(self) -> bool:
@@ -58,8 +60,15 @@ class HERTA:
             file = os.path.join(self.path, self.__response["file_name"])
             Files().write(self.__response["response"], file)
             return True
+        
+        if self.__response["command"] == "concept":
+            self.command = "concept"
+            self.__command = "concept"
+            return True
         return False
     
 
     def getStatusMessage(self, status: bool) -> str:
+        if (self.__command == "concept"):
+            return self.ia.concept(self.__message)
         return self.ia.statusMessage(self.__message, status)

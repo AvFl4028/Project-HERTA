@@ -1,9 +1,10 @@
 from fastapi import FastAPI, BackgroundTasks
 import asyncio
 from pydantic import BaseModel
-from HERTA.HERTA import HERTA
-from HERTA.Tools.Types.IA import IA_TYPE
+from HERTA import HERTA
+from HERTA.Tools import IA_TYPE
 from uuid import uuid4
+from fastapi.middleware.cors import CORSMiddleware
 
 
 class UserRequest(BaseModel):
@@ -11,9 +12,19 @@ class UserRequest(BaseModel):
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # También puedes usar ["*"] para permitir todos (no recomendado en producción)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 herta = HERTA(IA_TYPE.GEMINI, debug=True)
 
 message: str = None
+msg_ready: bool = False
 
 
 @app.get("/")
@@ -22,7 +33,7 @@ def status_handler():
 
 
 @app.post("/post")
-def post_handler(req: UserRequest, bg: BackgroundTasks):
+async def post_handler(req: UserRequest, bg: BackgroundTasks):
     global message
     message = "Waiting..."
     bg.add_task(response_task, req.message)
@@ -31,13 +42,22 @@ def post_handler(req: UserRequest, bg: BackgroundTasks):
 
 @app.get("/get")
 def get_handler():
-    global message
+    return {"ready": msg_ready}
+
+
+@app.get("/assistant/response")
+def assistantHandler():
     return {"message": message}
 
 
 def response_task(msg: str):
     global message
+    global msg_ready
+
+    msg_ready = False
     herta.setMessage(msg)
     response_status: bool = herta.loadResponse()
     if response_status:
         message = herta.getStatusMessage(herta.action())
+    
+    msg_ready = True

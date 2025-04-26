@@ -36,7 +36,7 @@ class Gemini:
             "Tu tarea es identificar la intención principal (por ejemplo: crear archivo, listar archivos, resumir texto, parafrasear, definir, etc.) "
             "y generar una respuesta en formato JSON con la siguiente estructura: "
             '{"texto": "lo que el usuario quiere hacer, como un resumen, parafraseo, etc.", '
-            '"command": "uno de estos comandos: touch, list", '
+            '"command": "uno de estos comandos: touch, list, concept", '
             '"file_name": "es caso de que sea el comando touch, aqui debe ir el nombre del archivo"'
             '"consulta": "el contenido específico que el usuario quiere investigar, consultar, resumir, etc."}. '
             "Regresa solo el JSON, sin ninguna explicación, en texto plano. Aquí está el mensaje del usuario:\n\n"
@@ -58,6 +58,9 @@ class Gemini:
             f"{msg}"
             f"variable status: {status}"
         )
+
+        print(prompt)
+
         return self.client.models.generate_content(
             model=self.model,
             contents=prompt,
@@ -66,7 +69,19 @@ class Gemini:
     def response(self, msg: str) -> dict:
         accion = json.loads(self.action(msg))
         accion["response"] = self.consult(accion["consulta"])
+        accion["concept"] = self.concept(accion["consulta"])
+        print(accion)
         return accion
+
+    def concept(self, msg: str):
+        prompt = (
+            "Dime un concepto, resumen o parafrasis corto segun lo deseado del siguiente mensaje, da el mensaje sin tu pensamiento o razonamiento de lo que quiere el usuario"
+            "Mensaje: " + msg
+        )
+        return self.client.models.generate_content(
+            model=self.model,
+            contents=prompt,
+        ).text
 
 
 if __name__ == "__main__":
