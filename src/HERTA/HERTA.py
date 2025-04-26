@@ -1,4 +1,4 @@
-from HERTA.Tools import IA_TYPE, Files, Gemini
+from .Tools import IA_TYPE, Files, Gemini
 import os
 from dotenv import load_dotenv
 

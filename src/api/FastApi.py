@@ -1,8 +1,8 @@
 from fastapi import FastAPI, BackgroundTasks
 import asyncio
 from pydantic import BaseModel
-from HERTA import HERTA
-from HERTA.Tools import IA_TYPE
+from ..HERTA import HERTA
+from ..HERTA.Tools import IA_TYPE
 from uuid import uuid4
 from fastapi.middleware.cors import CORSMiddleware
 
