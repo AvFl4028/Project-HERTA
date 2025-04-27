@@ -1,3 +1,4 @@
+from .Base import Base
 import google.genai as gemini
 import ollama as llama
 import os
