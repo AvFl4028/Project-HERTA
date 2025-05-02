@@ -1,6 +1,7 @@
-#!/bin/fish
+#!/usr/bin/env fish
+set pycache_dir (pwd)/__pycache__
 
-set PYTHONPYCACHEPREFIX $(pwd)/__pycache__
-# echo $PYTHONPYCACHEPREFIX
+python -X pycache_prefix=$pycache_dir -m uvicorn src.api.FastApi:app --reload
+
 # python -X pycache_prefix="$(pwd)/__pycache__" src/main.py
-uvicorn src.api.FastApi:app --reload
+# uvicorn src.api.FastApi:app --reload

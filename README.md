@@ -6,6 +6,6 @@ For use this bot in terminal, only execute main.py
 
 ## Falta
 - Gemini.py
-- Ollama.py
+- [x] Ollama.py
 - Eliminar IA.py
 - logger.py añadir mas funciones
