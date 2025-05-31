@@ -60,7 +60,7 @@ class Base(ABC):
         pass
 
     @abstractmethod
-    def action(self, msg: str) -> str:
+    def action(self, msg: str) -> dict:
         pass
 
     @abstractmethod

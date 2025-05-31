@@ -33,7 +33,7 @@ class Ollama(Base):
     def consult(self, msg: str) -> str:
         return self._ask_model(self.consult_prompt(msg))
 
-    def action(self, msg: str) -> str:
+    def action(self, msg: str) -> dict:
         raw_response: str = self._ask_model(self.action_prompt(msg))
         return self._clean_json_response(response=raw_response)
 

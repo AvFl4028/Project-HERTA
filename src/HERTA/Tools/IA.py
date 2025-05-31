@@ -7,7 +7,9 @@ import datetime
 
 # Create and configure logger
 logging.basicConfig(
-    filename=f"logs/{datetime.datetime.now()}.log", format="%(asctime)s %(message)s", filemode="w"
+    filename=f"logs/{datetime.datetime.now()}.log",
+    format="%(asctime)s %(message)s",
+    filemode="w",
 )
 
 # Creating an object
@@ -23,7 +25,7 @@ class Gemini:
         self.client = gemini.Client(api_key=self.GEMINI_API_KEY)
         self.model = "gemini-2.0-flash"
 
-    def consult(self, msg: str) -> str:
+    def consult(self, msg: str) -> str | None:
         if not msg or not self.GEMINI_API_KEY:
             return None
 
@@ -54,11 +56,11 @@ class Gemini:
             + msg
         )
 
-        raw_response: str = self.__ask_model(prompt=prompt)
+        raw_response: str | None = self.__ask_model(prompt=prompt)
 
-        return self.__clean_json_response(response=raw_response)
+        return self.__clean_json_response(response=(raw_response or ""))
 
-    def statusMessage(self, msg: str, status: bool) -> str:
+    def statusMessage(self, msg: str, status: bool) -> str|None:
         prompt = (
             "Analiza el siguiente mensaje y deduce un mensaje en el cual me digas el estado de la accion a partir del valor de la variable, unicamente dame el mensaje, aqui esta el mensaje y variable: "
             f"{msg}"
@@ -85,7 +87,7 @@ class Gemini:
         response = self.__ask_model(prompt)
         return response
 
-    def __ask_model(self, prompt: str) -> str:
+    def __ask_model(self, prompt: str) -> str | None:
         try:
             response = self.client.models.generate_content(
                 model=self.model,
