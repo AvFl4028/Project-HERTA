@@ -7,7 +7,7 @@ class Commands:
         self.command = command
         self.args = args
 
-    def execute(self):
+    def execute(self) -> str:
         return subprocess.run(
             f"{self.command} {self.args}",
             shell=True,
@@ -17,15 +17,21 @@ class Commands:
         ).stdout
 
 
-class List(Commands):
-    def __init__(self):
-        super().__init__("", "")
-
-    def execute(self, path: str = None):
+class List():
+    def execute(self, path: str = "") -> list[str]:
         if path == "" or path == None:
             return os.listdir(".")
         return os.listdir(path)
 
+
+class Organize:
+    def __init__(self, path: str) -> None:
+        self.path = path
+        self.docsPath: str = ""
+        self.downloadPath: str = ""
+    
+    def execute(self):
+        pass
 
 class Touch(Commands):
     def __init__(self, path: str):
@@ -34,6 +40,7 @@ class Touch(Commands):
 
 def getPaths(path: str) -> list[str]:
     paths = []
+    full_path: str = ""
     try:
         for mini_path in os.listdir(path):
             if mini_path != "venv" and mini_path != ".git" and mini_path != ".obsidian":

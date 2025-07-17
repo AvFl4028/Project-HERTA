@@ -1,4 +1,4 @@
-from HERTA.Tools.Commands.Commands import Touch
+from .Commands import Touch
 
 
 class Files:
